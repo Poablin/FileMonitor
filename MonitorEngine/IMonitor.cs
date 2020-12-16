@@ -1,4 +1,4 @@
-﻿namespace FileMonitor
+﻿namespace MonitorEngine
 {
     interface IMonitor
     {

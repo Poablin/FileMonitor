@@ -6,7 +6,7 @@ namespace FileMonitor
     {
         private static void Main(string[] args)
         {
-            var monitor = new Monitor();
+            var monitor = new MonitorEngine.Monitor();
 
             while (true)
             {

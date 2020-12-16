@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace FileMonitor
+namespace MonitorEngine
 {
-    internal class Monitor : IMonitor
+    public class Monitor : IMonitor
     {
         private readonly string Path = @"C:\Users\krist\Downloads\test\Done";
 
