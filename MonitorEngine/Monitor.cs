@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MonitorEngine
 {
-    public class Monitor : IMonitor
+    public class Monitor
     {
         private readonly string Path = @"C:\Users\krist\Downloads\test\Done";
 
