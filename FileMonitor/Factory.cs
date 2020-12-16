@@ -1,9 +1,5 @@
-﻿using MonitorEngine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MonitorEngine;
+using MonitorEngine.Utilities;
 
 namespace FileMonitor
 {
@@ -13,10 +9,13 @@ namespace FileMonitor
         {
             return new Logger();
         }
-
         public static IErrorCheck CreateErrorCheck()
         {
             return new ErrorCheck();
+        }
+        public static IMonitor CreateMonitor()
+        {
+            return new Monitor(CreateLogger(), CreateErrorCheck());
         }
     }
 }
