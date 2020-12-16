@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 
 namespace FileMonitor
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var monitor = new Monitor();
 
-            while(true)
+            while (true)
             {
-                monitor.SearchThroughFiles();
+                monitor.Run();
                 Thread.Sleep(900000);
             }
         }
