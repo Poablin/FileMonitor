@@ -1,17 +1,18 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileMonitor
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var monitor = new MonitorEngine.Monitor();
-
             while (true)
             {
-                monitor.Run();
-                Thread.Sleep(900000);
+                var run = monitor.Run();
+                await run;
+                Thread.Sleep(5000);
             }
         }
     }
