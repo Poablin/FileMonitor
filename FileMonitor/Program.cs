@@ -10,11 +10,13 @@ namespace FileMonitor
     {
         static void Main(string[] args)
         {
-            var monitor = new Monitor(@"C:\Users\krist\Downloads\test\Done\20201209");
+            var monitor = new Monitor();
             monitor.SearchThroughFiles();
+
             while(true)
             {
-
+                var command = Console.ReadLine();
+                if (command == "q") Environment.Exit(0);
             }
         }
     }
