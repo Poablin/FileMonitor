@@ -9,12 +9,12 @@ namespace FileMonitor
 {
     public static class Factory
     {
-        public static Logger CreateLogger()
+        public static ILogger CreateLogger()
         {
             return new Logger();
         }
 
-        public static ErrorCheck CreateErrorCheck()
+        public static IErrorCheck CreateErrorCheck()
         {
             return new ErrorCheck();
         }
