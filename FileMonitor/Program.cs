@@ -7,7 +7,7 @@ namespace FileMonitor
     {
         static async Task Main(string[] args)
         {
-            var monitor = new MonitorEngine.Monitor();
+            var monitor = new MonitorEngine.Monitor(Factory.CreateLogger(), Factory.CreateErrorCheck());
             while (true)
             {
                 var run = monitor.Run();

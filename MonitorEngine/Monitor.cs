@@ -1,11 +1,20 @@
-﻿using System;
+﻿using MonitorEngine.Utilities;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace MonitorEngine
 {
-    public class Monitor
+    public class Monitor : IMonitor
     {
+        public Monitor(ILogger logger, IErrorCheck errorCheck)
+        {
+            _logger = logger;
+            _errorCheck = errorCheck;
+        }
+
+        ILogger _logger;
+        IErrorCheck _errorCheck;
         private readonly string Path = @"C:\Users\krist\Downloads\test\Done";
 
         public async Task Run()
