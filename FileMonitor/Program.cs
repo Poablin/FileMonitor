@@ -11,7 +11,7 @@ namespace FileMonitor
             while (true)
             {
                 await monitor.RunAsync();
-                Thread.Sleep(5000);
+                Thread.Sleep(900000);
             }
         }
     }
