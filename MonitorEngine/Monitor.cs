@@ -25,7 +25,7 @@ namespace MonitorEngine
         public bool SearchThroughFilesAndDeleteAsync()
         {
             var currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
-            var currentDateInt = Convert.ToInt64(currentDateString);
+            var currentDateLong = Convert.ToInt64(currentDateString);
             _logger.Log("currentDateString: " + currentDateString);
 
             foreach (var directory in Directory.GetDirectories(Path))
@@ -36,9 +36,10 @@ namespace MonitorEngine
                 {
                     try
                     {
-                        if (Convert.ToInt64(file.Substring(file.LastIndexOf('[')).Trim('[', ']')) < currentDateInt)
+                        if (_errorCheck.CheckIfFileIsCorrectFormat(file) == false) continue;
+                        if (_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file, currentDateLong))
                         {
-                            if (count == 0) Console.WriteLine("Folder: " + directory);
+                            if (count == 0) _logger.Log("Folder: " + directory);
                             count++;
                             File.Delete(file);
                             _logger.Log(file + " - Deleted");
@@ -48,7 +49,7 @@ namespace MonitorEngine
                     {
                         _logger.Log(e.ToString());
                     }
-                    if (Directory.GetFiles(directory).Length == 0) Directory.Delete(directory);
+                    if (_errorCheck.CheckIfDirectoryIsEmpty(directory)) Directory.Delete(directory);
                 }
             }
 
