@@ -24,8 +24,9 @@ namespace MonitorEngine
 
         public bool SearchThroughFilesAndDeleteAsync()
         {
-            var currentDateString = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Second}";
+            var currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
             var currentDateInt = Convert.ToInt64(currentDateString);
+            _logger.Log(currentDateString);
 
             foreach (var directory in Directory.GetDirectories(Path))
             {
@@ -40,12 +41,13 @@ namespace MonitorEngine
                             if (count == 0) Console.WriteLine("Folder: " + directory);
                             count++;
                             File.Delete(file);
-                            Console.WriteLine(file + " - Deleted");
+                            _logger.Log(file + " - Deleted");
                         }
                     }
                     catch (IOException e)
                     {
-                        Console.WriteLine(e);
+                        var exceptionString = e.ToString();
+                        _logger.Log(exceptionString);
                     }
                     if (Directory.GetFiles(directory).Length == 0) Directory.Delete(directory);
                 }
