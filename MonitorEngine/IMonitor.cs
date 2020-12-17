@@ -6,7 +6,7 @@ namespace MonitorEngine
     {
         Task RunAsync();
         bool StartOperation();
-        void SearchThroughDirectoriesAndDeleteIfNecessary();
-        void SearchThroughFilesAndDeleteIfNecessary(string directory);
+        void SearchDirectoriesAndDeleteIfNecessary();
+        void SearchFilesAndDeleteIfNecessary(string directory);
     }
 }

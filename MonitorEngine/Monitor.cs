@@ -32,24 +32,24 @@ namespace MonitorEngine
 
         public bool StartOperation()
         {
-            SearchThroughDirectoriesAndDeleteIfNecessary();
+            SearchDirectoriesAndDeleteIfNecessary();
             return true;
         }
 
-        public void SearchThroughDirectoriesAndDeleteIfNecessary()
+        public void SearchDirectoriesAndDeleteIfNecessary()
         {
             foreach (var directory in _fileOperations.GetDirectory(Path))
             {
                 _fileCount = 0;
                 if (!_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
-                SearchThroughFilesAndDeleteIfNecessary(directory);
+                SearchFilesAndDeleteIfNecessary(directory);
                 if (!_errorCheck.CheckIfDirectoryIsEmpty(directory)) continue;
                 _fileOperations.DeleteDirectory(directory);
                 _logger.Log("Folder: " + directory + " - Deleted");
             }
         }
 
-        public void SearchThroughFilesAndDeleteIfNecessary(string directory)
+        public void SearchFilesAndDeleteIfNecessary(string directory)
         {
             foreach (var file in _fileOperations.GetFiles(directory))
                 try
