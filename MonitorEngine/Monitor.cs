@@ -13,9 +13,9 @@ namespace MonitorEngine
             _errorCheck = errorCheck;
         }
 
-        ILogger _logger;
-        IErrorCheck _errorCheck;
-        private readonly string Path = @"C:\Users\krist\Downloads\test\Done";
+        private ILogger _logger;
+        private IErrorCheck _errorCheck;
+        private const string Path = @"C:\Users\krist\Downloads\test\Done";
 
         public async Task Run()
         {
