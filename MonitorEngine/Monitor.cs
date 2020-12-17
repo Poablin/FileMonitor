@@ -7,7 +7,7 @@ namespace MonitorEngine
 {
     public class Monitor : IMonitor
     {
-        private const string Path = @"C:\Users\krist\Downloads\test\Done"; //eks C:\Users\test\Downloads\Done
+        private const string Path = @"Enter full path here"; //eks C:\Users\test\Downloads\Done
         private readonly IErrorCheck _errorCheck;
         private readonly IFileOperations _fileOperations;
         private readonly ILogger _logger;
