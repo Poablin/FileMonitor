@@ -43,11 +43,9 @@ namespace MonitorEngine
                 _count = 0;
                 if (!_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
                 SearchThroughFilesAndDeleteIfNecessary(directory);
-                if (_errorCheck.CheckIfDirectoryIsEmpty(directory))
-                {
-                    _fileOperations.DeleteDirectory(directory);
-                    _logger.Log("Folder: " + directory + " - Deleted");
-                }
+                if (!_errorCheck.CheckIfDirectoryIsEmpty(directory)) continue;
+                _fileOperations.DeleteDirectory(directory);
+                _logger.Log("Folder: " + directory + " - Deleted");
             }
         }
 
