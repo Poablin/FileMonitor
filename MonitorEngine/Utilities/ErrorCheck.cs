@@ -6,6 +6,8 @@ namespace MonitorEngine.Utilities
 {
     public class ErrorCheck : IErrorCheck
     {
+        private readonly string _currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
+
         public bool CheckIfDirectoryIsEmpty(string directory)
         {
             return Directory.GetFiles(directory).Length == 0;
@@ -23,9 +25,10 @@ namespace MonitorEngine.Utilities
             return fileDate.Length == 12 && Regex.IsMatch(fileDate, @"[0001-9999][01-12][01-32]");
         }
 
-        public bool CheckIfFileDateIsLessThanCurrentDate(string file, long currentDate)
+        public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
-            return Convert.ToInt64(file.Substring(file.LastIndexOf('[')).Trim('[', ']')) < currentDate;
+            var currentDateLong = Convert.ToInt64(_currentDateString);
+            return Convert.ToInt64(file.Substring(file.LastIndexOf('[')).Trim('[', ']')) < currentDateLong;
         }
     }
 }

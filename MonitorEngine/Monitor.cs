@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MonitorEngine.Utilities;
 
 namespace MonitorEngine
@@ -10,51 +8,57 @@ namespace MonitorEngine
         private const string Path = @"C:\Users\krist\Downloads\test\Done";
         private readonly IErrorCheck _errorCheck;
         private readonly ILogger _logger;
+        private readonly IFileOperations _fileOperations;
+        private int _count;
 
-        public Monitor(ILogger logger, IErrorCheck errorCheck)
+        public Monitor(ILogger logger, IErrorCheck errorCheck, IFileOperations fileOperations)
         {
             _logger = logger;
             _errorCheck = errorCheck;
+            _fileOperations = fileOperations;
         }
 
-        public async Task Run()
+        public async Task RunAsync()
         {
-            await Task.FromResult(SearchThroughFilesAndDeleteAsync());
+            await Task.FromResult(StartOperation());
         }
 
-        public bool SearchThroughFilesAndDeleteAsync()
+        public bool StartOperation()
         {
-            var currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
-            var currentDateLong = Convert.ToInt64(currentDateString);
-            _logger.Log("currentDateString: " + currentDateString);
-
-            foreach (var directory in Directory.GetDirectories(Path))
+            try
             {
-                var count = 0;
-                if (_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
-                foreach (var file in Directory.GetFiles(directory))
-                {
-                    try
-                    {
-                        if (_errorCheck.CheckIfFileIsCorrectFormat(file) == false) continue;
-                        if (_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file, currentDateLong))
-                        {
-                            if (count == 0) _logger.Log("Folder: " + directory);
-                            count++;
-                            File.Delete(file);
-                            _logger.Log(file + " - Deleted");
-                        }
-                    }
-                    catch (IOException e)
-                    {
-                        _logger.Log(e.ToString());
-                    }
-
-                    if (_errorCheck.CheckIfDirectoryIsEmpty(directory)) Directory.Delete(directory);
-                }
+                SearchThroughDirectoriesAndDeleteIfNecessary();
+            }
+            catch (System.IO.IOException e)
+            {
+                _logger.Log(e.ToString());
             }
 
             return true;
+        }
+
+        public void SearchThroughDirectoriesAndDeleteIfNecessary()
+        {
+            foreach (var directory in _fileOperations.GetDirectory(Path))
+            {
+                _count = 0;
+                if (_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
+                SearchThroughFilesAndDeleteIfNecessary(directory);
+                if (_errorCheck.CheckIfDirectoryIsEmpty(directory)) _fileOperations.DeleteDirectory(directory);
+            }
+        }
+
+        public void SearchThroughFilesAndDeleteIfNecessary(string directory)
+        {
+            foreach (var file in _fileOperations.GetFiles(directory))
+            {
+                if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
+                if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
+                if (_count == 0) _logger.Log("Folder: " + directory);
+                _count++;
+                _fileOperations.DeleteFile(file);
+                _logger.Log(file + " - Deleted");
+            }
         }
     }
 }

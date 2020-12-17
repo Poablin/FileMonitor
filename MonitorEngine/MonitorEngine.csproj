@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utilities\FileOperations.cs" />
+    <Compile Include="Utilities\IFileOperations.cs" />
     <Compile Include="Utilities\ILogger.cs" />
     <Compile Include="Utilities\IErrorCheck.cs" />
     <Compile Include="IMonitor.cs" />

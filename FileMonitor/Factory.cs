@@ -15,9 +15,14 @@ namespace FileMonitor
             return new ErrorCheck();
         }
 
+        private static IFileOperations CreateFileOperations()
+        {
+            return new FileOperations();
+        }
+
         public static IMonitor CreateMonitor()
         {
-            return new Monitor(CreateLogger(), CreateErrorCheck());
+            return new Monitor(CreateLogger(), CreateErrorCheck(), CreateFileOperations());
         }
     }
 }

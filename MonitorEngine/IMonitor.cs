@@ -4,7 +4,9 @@ namespace MonitorEngine
 {
     public interface IMonitor
     {
-        Task Run();
-        bool SearchThroughFilesAndDeleteAsync();
+        Task RunAsync();
+        bool StartOperation();
+        void SearchThroughDirectoriesAndDeleteIfNecessary();
+        void SearchThroughFilesAndDeleteIfNecessary(string directory);
     }
 }

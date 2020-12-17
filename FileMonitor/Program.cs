@@ -10,8 +10,7 @@ namespace FileMonitor
             var monitor = Factory.CreateMonitor();
             while (true)
             {
-                var run = monitor.Run();
-                await run;
+                await monitor.RunAsync();
                 Thread.Sleep(5000);
             }
         }
