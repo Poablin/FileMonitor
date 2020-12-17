@@ -46,8 +46,7 @@ namespace MonitorEngine
                     }
                     catch (IOException e)
                     {
-                        var exceptionString = e.ToString();
-                        _logger.Log(exceptionString);
+                        _logger.Log(e.ToString());
                     }
                     if (Directory.GetFiles(directory).Length == 0) Directory.Delete(directory);
                 }
