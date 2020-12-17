@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using MonitorEngine.Utilities;
 
@@ -6,7 +7,7 @@ namespace MonitorEngine
 {
     public class Monitor : IMonitor
     {
-        private const string Path = @"Enter full path here"; //eks C:\Users\test\Downloads\Done
+        private const string Path = @"C:\Users\krist\Downloads\test\Done"; //eks C:\Users\test\Downloads\Done
         private readonly IErrorCheck _errorCheck;
         private readonly IFileOperations _fileOperations;
         private readonly ILogger _logger;
@@ -51,8 +52,9 @@ namespace MonitorEngine
 
         public void SearchFilesAndDeleteIfNecessary(string directory)
         {
-            foreach (var file in _fileOperations.GetFiles(directory))
-                try
+            try
+            {
+                foreach (var file in _fileOperations.GetFiles(directory))
                 {
                     if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
                     if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
@@ -61,10 +63,11 @@ namespace MonitorEngine
                     _fileOperations.DeleteFile(file);
                     _logger.Log(file + " - Deleted");
                 }
-                catch (IOException e)
-                {
-                    _logger.Log(e.ToString());
-                }
+            }
+            catch (IOException e)
+            {
+                _logger.Log(e.ToString());
+            }
 
             if (_fileCount > 0) _logger.Log("");
         }

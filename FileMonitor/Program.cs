@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using MonitorEngine.Utilities;
 
 namespace FileMonitor
 {
@@ -7,7 +8,7 @@ namespace FileMonitor
     {
         private static async Task Main(string[] args)
         {
-            var monitor = Factory.CreateMonitor();
+            var monitor = new MonitorEngine.Monitor(new Logger(), new ErrorCheck(), new FileOperations());
             while (true)
             {
                 await monitor.RunAsync();
