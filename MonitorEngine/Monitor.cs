@@ -26,12 +26,12 @@ namespace MonitorEngine
         {
             var currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
             var currentDateInt = Convert.ToInt64(currentDateString);
-            _logger.Log(currentDateString);
+            _logger.Log("currentDateString: " + currentDateString);
 
             foreach (var directory in Directory.GetDirectories(Path))
             {
                 var count = 0;
-                if (directory.Substring(directory.LastIndexOf('\\') + 1).ToString().Length != 8) continue;
+                if (_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
                 foreach (var file in Directory.GetFiles(directory))
                 {
                     try
