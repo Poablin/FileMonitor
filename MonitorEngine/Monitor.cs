@@ -6,7 +6,7 @@ namespace MonitorEngine
 {
     public class Monitor : IMonitor
     {
-        private const string Path = @"C:\Users\krist\Downloads\test\Done";
+        private const string Path = @"C:\Users\krist\Downloads\test\Done"; //eks C:\Users\test\Downloads\Done
         private readonly IErrorCheck _errorCheck;
         private readonly IFileOperations _fileOperations;
         private readonly ILogger _logger;
@@ -26,6 +26,7 @@ namespace MonitorEngine
                 _logger.Log("Path does not exist");
                 return;
             }
+
             await Task.FromResult(StartOperation());
         }
 
@@ -40,16 +41,19 @@ namespace MonitorEngine
             foreach (var directory in _fileOperations.GetDirectory(Path))
             {
                 _count = 0;
-                if (_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
+                if (!_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
                 SearchThroughFilesAndDeleteIfNecessary(directory);
-                if (_errorCheck.CheckIfDirectoryIsEmpty(directory)) _fileOperations.DeleteDirectory(directory);
+                if (_errorCheck.CheckIfDirectoryIsEmpty(directory))
+                {
+                    _fileOperations.DeleteDirectory(directory);
+                    _logger.Log("Folder: " + directory + " - Deleted");
+                }
             }
         }
 
         public void SearchThroughFilesAndDeleteIfNecessary(string directory)
         {
             foreach (var file in _fileOperations.GetFiles(directory))
-            {
                 try
                 {
                     if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
@@ -63,7 +67,7 @@ namespace MonitorEngine
                 {
                     _logger.Log(e.ToString());
                 }
-            }
+
             if (_count > 0) _logger.Log("");
         }
     }
