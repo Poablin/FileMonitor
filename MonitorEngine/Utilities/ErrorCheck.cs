@@ -8,6 +8,10 @@ namespace MonitorEngine.Utilities
     {
         private readonly string _currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
 
+        public bool CheckIfPathExists(string path)
+        {
+            return Directory.Exists(path);
+        }
         public bool CheckIfDirectoryIsEmpty(string directory)
         {
             return Directory.GetFiles(directory).Length == 0;
@@ -27,8 +31,7 @@ namespace MonitorEngine.Utilities
 
         public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
-            var currentDateLong = Convert.ToInt64(_currentDateString);
-            return Convert.ToInt64(file.Substring(file.LastIndexOf('[')).Trim('[', ']')) < currentDateLong;
+            return Convert.ToInt64(file.Substring(file.LastIndexOf('[')).Trim('[', ']')) < Convert.ToInt64(_currentDateString);
         }
     }
 }

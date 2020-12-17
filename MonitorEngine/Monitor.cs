@@ -1,14 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using MonitorEngine.Utilities;
 
 namespace MonitorEngine
 {
     public class Monitor : IMonitor
     {
-        private const string Path = @"C:\Users\krist\Downloads\test\Done";
+        private const string Path = @"";
         private readonly IErrorCheck _errorCheck;
-        private readonly ILogger _logger;
         private readonly IFileOperations _fileOperations;
+        private readonly ILogger _logger;
         private int _count;
 
         public Monitor(ILogger logger, IErrorCheck errorCheck, IFileOperations fileOperations)
@@ -20,6 +21,11 @@ namespace MonitorEngine
 
         public async Task RunAsync()
         {
+            if (!_errorCheck.CheckIfPathExists(Path))
+            {
+                _logger.Log("Path does not exist");
+                return;
+            }
             await Task.FromResult(StartOperation());
         }
 
@@ -29,7 +35,7 @@ namespace MonitorEngine
             {
                 SearchThroughDirectoriesAndDeleteIfNecessary();
             }
-            catch (System.IO.IOException e)
+            catch (IOException e)
             {
                 _logger.Log(e.ToString());
             }
@@ -59,6 +65,7 @@ namespace MonitorEngine
                 _fileOperations.DeleteFile(file);
                 _logger.Log(file + " - Deleted");
             }
+            if (_count > 0) _logger.Log("");
         }
     }
 }
