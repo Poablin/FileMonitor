@@ -1,21 +1,21 @@
-﻿using MonitorEngine.Utilities;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using MonitorEngine.Utilities;
 
 namespace MonitorEngine
 {
     public class Monitor : IMonitor
     {
+        private const string Path = @"C:\Users\krist\Downloads\test\Done";
+        private readonly IErrorCheck _errorCheck;
+        private readonly ILogger _logger;
+
         public Monitor(ILogger logger, IErrorCheck errorCheck)
         {
             _logger = logger;
             _errorCheck = errorCheck;
         }
-
-        private ILogger _logger;
-        private IErrorCheck _errorCheck;
-        private const string Path = @"C:\Users\krist\Downloads\test\Done";
 
         public async Task Run()
         {
@@ -49,6 +49,7 @@ namespace MonitorEngine
                     {
                         _logger.Log(e.ToString());
                     }
+
                     if (_errorCheck.CheckIfDirectoryIsEmpty(directory)) Directory.Delete(directory);
                 }
             }

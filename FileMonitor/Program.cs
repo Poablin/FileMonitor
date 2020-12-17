@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace FileMonitor
 {
-    internal class Program
+    internal static class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             var monitor = Factory.CreateMonitor();
             while (true)
