@@ -10,7 +10,7 @@ namespace MonitorEngine
         private readonly IErrorCheck _errorCheck;
         private readonly IFileOperations _fileOperations;
         private readonly ILogger _logger;
-        private int _count;
+        private int _fileCount;
 
         public Monitor(ILogger logger, IErrorCheck errorCheck, IFileOperations fileOperations)
         {
@@ -40,7 +40,7 @@ namespace MonitorEngine
         {
             foreach (var directory in _fileOperations.GetDirectory(Path))
             {
-                _count = 0;
+                _fileCount = 0;
                 if (!_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
                 SearchThroughFilesAndDeleteIfNecessary(directory);
                 if (!_errorCheck.CheckIfDirectoryIsEmpty(directory)) continue;
@@ -56,8 +56,8 @@ namespace MonitorEngine
                 {
                     if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
                     if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
-                    if (_count == 0) _logger.Log("Folder: " + directory);
-                    _count++;
+                    if (_fileCount == 0) _logger.Log("Folder: " + directory);
+                    _fileCount++;
                     _fileOperations.DeleteFile(file);
                     _logger.Log(file + " - Deleted");
                 }
@@ -66,7 +66,7 @@ namespace MonitorEngine
                     _logger.Log(e.ToString());
                 }
 
-            if (_count > 0) _logger.Log("");
+            if (_fileCount > 0) _logger.Log("");
         }
     }
 }
