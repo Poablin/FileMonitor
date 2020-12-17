@@ -6,7 +6,7 @@ namespace MonitorEngine
 {
     public class Monitor : IMonitor
     {
-        private const string Path = @"";
+        private const string Path = @"C:\Users\krist\Downloads\test\Done";
         private readonly IErrorCheck _errorCheck;
         private readonly IFileOperations _fileOperations;
         private readonly ILogger _logger;
@@ -31,15 +31,7 @@ namespace MonitorEngine
 
         public bool StartOperation()
         {
-            try
-            {
-                SearchThroughDirectoriesAndDeleteIfNecessary();
-            }
-            catch (IOException e)
-            {
-                _logger.Log(e.ToString());
-            }
-
+            SearchThroughDirectoriesAndDeleteIfNecessary();
             return true;
         }
 
@@ -58,12 +50,19 @@ namespace MonitorEngine
         {
             foreach (var file in _fileOperations.GetFiles(directory))
             {
-                if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
-                if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
-                if (_count == 0) _logger.Log("Folder: " + directory);
-                _count++;
-                _fileOperations.DeleteFile(file);
-                _logger.Log(file + " - Deleted");
+                try
+                {
+                    if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
+                    if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
+                    if (_count == 0) _logger.Log("Folder: " + directory);
+                    _count++;
+                    _fileOperations.DeleteFile(file);
+                    _logger.Log(file + " - Deleted");
+                }
+                catch (IOException e)
+                {
+                    _logger.Log(e.ToString());
+                }
             }
             if (_count > 0) _logger.Log("");
         }
