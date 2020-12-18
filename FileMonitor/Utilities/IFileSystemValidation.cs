@@ -2,9 +2,9 @@
 {
     public interface IFileSystemValidation
     {
-        bool CheckIfDirectoryIsEmpty(string directory);
-        bool CheckIfDirectoryIsCorrectFormat(string directory);
-        bool CheckIfFileIsCorrectFormat(string file);
-        bool CheckIfFileDateIsLessThanCurrentDate(string file);
+        bool DirectoryIsEmpty(string directory);
+        bool DirectoryIsCorrectFormat(string directory);
+        bool FileIsCorrectFormat(string file);
+        bool FileDateIsLessThanCurrentDate(string file);
     }
 }

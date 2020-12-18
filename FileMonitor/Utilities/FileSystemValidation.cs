@@ -7,30 +7,29 @@ namespace FileMonitor
 {
     public class FileSystemValidation : IFileSystemValidation
     {
-        private readonly string _currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
-
-        public bool CheckIfDirectoryIsEmpty(string directory)
+        public bool DirectoryIsEmpty(string directory)
         {
             return Directory.GetFiles(directory).Length == 0;
         }
 
-        public bool CheckIfDirectoryIsCorrectFormat(string directory)
+        public bool DirectoryIsCorrectFormat(string directory)
         {
             var directoryName = directory.Substring(directory.LastIndexOf('\\') + 1);
             return Regex.IsMatch(directoryName, @"[0-9]{8}");
         }
 
-        public bool CheckIfFileIsCorrectFormat(string file)
+        public bool FileIsCorrectFormat(string file)
         {
             var fileName = file.Substring(file.LastIndexOf('\\') + 1);
             return Regex.IsMatch(fileName, @"^[^.]{1,}.[^.]{1,}.\[IM-[\d]{7}]-\[[\d]{12}\]");
         }
 
-        public bool CheckIfFileDateIsLessThanCurrentDate(string file)
+        public bool FileDateIsLessThanCurrentDate(string file)
         {
             var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-            if (!DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _)) return false;
-            return DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
+            return !DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _)
+                ? false
+                : DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
         }
     }
 }

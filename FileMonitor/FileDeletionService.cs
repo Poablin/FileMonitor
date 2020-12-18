@@ -39,10 +39,10 @@ namespace FileMonitor
             foreach (var directory in Directory.GetDirectories(path))
             {
                 _fileCount = 0;
-                if (_fileSystemValidation.CheckIfDirectoryIsCorrectFormat(directory))
+                if (_fileSystemValidation.DirectoryIsCorrectFormat(directory))
                 {
                     SearchFilesAndDeleteIfNecessary(directory);
-                    if (_fileSystemValidation.CheckIfDirectoryIsEmpty(directory))
+                    if (_fileSystemValidation.DirectoryIsEmpty(directory))
                     {
                         Directory.Delete(directory);
                         _logger.Log("Folder: " + directory + " - Deleted");
@@ -57,9 +57,9 @@ namespace FileMonitor
             {
                 foreach (var file in Directory.GetFiles(directory))
                 {
-                    if (_fileSystemValidation.CheckIfFileIsCorrectFormat(file))
+                    if (_fileSystemValidation.FileIsCorrectFormat(file))
                     {
-                        if (_fileSystemValidation.CheckIfFileDateIsLessThanCurrentDate(file))
+                        if (_fileSystemValidation.FileDateIsLessThanCurrentDate(file))
                         {
                             if (_fileCount == 0) _logger.Log("Folder: " + directory);
                             _fileCount++;
