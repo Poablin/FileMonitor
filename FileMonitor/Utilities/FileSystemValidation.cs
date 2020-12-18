@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace FileMonitor
 {
     public class FileSystemValidation : IFileSystemValidation
     {
-        public bool DirectoryIsEmpty(string directory)
-        {
-            return Directory.GetFiles(directory).Length == 0;
-        }
-
         public bool DirectoryIsCorrectFormat(string directory)
         {
             var directoryName = directory.Substring(directory.LastIndexOf('\\') + 1);
@@ -27,9 +21,9 @@ namespace FileMonitor
         public bool FileDateIsLessThanCurrentDate(string file)
         {
             var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-            return !DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _)
-                ? false
-                : DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
+            var dateIsValid = DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
+            if (dateIsValid) return false;
+            return DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
         }
     }
 }

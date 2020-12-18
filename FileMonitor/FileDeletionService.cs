@@ -19,7 +19,7 @@ namespace FileMonitor
         {
             foreach (var path in _paths)
             {
-                if (Directory.Exists(path) == false)
+                if (!Directory.Exists(path))
                 {
                     _logger.Log("Path does not exist");
                     return;
@@ -42,7 +42,7 @@ namespace FileMonitor
                 if (_fileSystemValidation.DirectoryIsCorrectFormat(directory))
                 {
                     SearchFilesAndDeleteIfNecessary(directory);
-                    if (_fileSystemValidation.DirectoryIsEmpty(directory))
+                    if (Directory.GetFiles(directory).Length == 0)
                     {
                         Directory.Delete(directory);
                         _logger.Log("Folder: " + directory + " - Deleted");
