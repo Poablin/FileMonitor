@@ -19,7 +19,7 @@ namespace FileMonitor
         {
             foreach (var path in _paths)
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(path) == false)
                 {
                     _logger.Log("Path does not exist");
                     return;
@@ -39,10 +39,10 @@ namespace FileMonitor
             foreach (var directory in Directory.GetDirectories(path))
             {
                 _fileCount = 0;
-                if (!_fileSystemValidation.CheckIfDirectoryIsCorrectFormat(directory))
+                if (_fileSystemValidation.CheckIfDirectoryIsCorrectFormat(directory))
                 {
                     SearchFilesAndDeleteIfNecessary(directory);
-                    if (!_fileSystemValidation.CheckIfDirectoryIsEmpty(directory))
+                    if (_fileSystemValidation.CheckIfDirectoryIsEmpty(directory))
                     {
                         Directory.Delete(directory);
                         _logger.Log("Folder: " + directory + " - Deleted");
@@ -57,12 +57,16 @@ namespace FileMonitor
             {
                 foreach (var file in Directory.GetFiles(directory))
                 {
-                    if (!_fileSystemValidation.CheckIfFileIsCorrectFormat(file)) continue;
-                    if (!_fileSystemValidation.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
-                    if (_fileCount == 0) _logger.Log("Folder: " + directory);
-                    _fileCount++;
-                    File.Delete(file);
-                    _logger.Log(file + " - Deleted");
+                    if (_fileSystemValidation.CheckIfFileIsCorrectFormat(file))
+                    {
+                        if (_fileSystemValidation.CheckIfFileDateIsLessThanCurrentDate(file))
+                        {
+                            if (_fileCount == 0) _logger.Log("Folder: " + directory);
+                            _fileCount++;
+                            File.Delete(file);
+                            _logger.Log(file + " - Deleted");
+                        }
+                    }
                 }
             }
             catch (IOException e)
