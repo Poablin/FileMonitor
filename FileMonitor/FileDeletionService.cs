@@ -4,7 +4,7 @@ namespace FileMonitor
 {
     public class FileDeletionService : IFileDeletionService
     {
-        private readonly string[] Paths = { @"Enter full path here" }; //eks C:\Users\test\Downloads\Done
+        private readonly string[] Paths = { @"C:\Users\krist\Downloads\input" }; //eks C:\Users\test\Downloads
         private readonly IErrorCheck _errorCheck;
         private readonly ILogger _logger;
         private int _fileCount;
@@ -24,8 +24,17 @@ namespace FileMonitor
                     _logger.Log("Path does not exist");
                     return;
                 }
-
-                SearchDirectoriesAndDeleteIfNecessary(path);
+                foreach (var directory in Directory.GetDirectories(path))
+                {
+                    if (new DirectoryInfo(directory).Name == "Done")
+                    {
+                        SearchDirectoriesAndDeleteIfNecessary(directory);
+                    }
+                    else
+                    {
+                        _logger.Log("No Done directory exists");
+                    }
+                }
             }
         }
 

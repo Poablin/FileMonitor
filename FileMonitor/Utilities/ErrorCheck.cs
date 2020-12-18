@@ -32,8 +32,9 @@ namespace FileMonitor
 
         public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
-            var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-
+            var date = DateTime.Parse(file.Substring(file.LastIndexOf('[')).Trim('[', ']'));
+            if (date < DateTime.Now) return true;
+            return false;
         }
 
         public bool IsValidFile()

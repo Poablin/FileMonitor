@@ -43,14 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMonitor.cs" />
-    <Compile Include="Monitor.cs" />
+    <Compile Include="IFileDeletionService.cs" />
+    <Compile Include="FileDeletionService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ErrorCheck.cs" />
-    <Compile Include="Utilities\FileOperations.cs" />
     <Compile Include="Utilities\IErrorCheck.cs" />
-    <Compile Include="Utilities\IFileOperations.cs" />
     <Compile Include="Utilities\ILogger.cs" />
     <Compile Include="Utilities\Logger.cs" />
   </ItemGroup>
