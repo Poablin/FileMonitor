@@ -6,7 +6,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidation _fileSystemValidation;
         private readonly ILogger _logger;
-        private readonly string[] _paths = { @"C:\Users\krist\Downloads\input" }; //eks C:\Users\test\Downloads
+        private readonly string[] _paths = { @"Enter path here" };
         private int _fileCount;
 
         public FileDeletionService(ILogger logger, IFileSystemValidation fileSystemValidation)
