@@ -6,7 +6,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidation _fileSystemValidation;
         private readonly ILogger _logger;
-        private string[] _paths = { @"Enter path here" };
+        private string[] _paths = { @"Enter paths here" };
         private int _fileCount;
 
         public FileDeletionService(ILogger logger, IFileSystemValidation fileSystemValidation)
@@ -58,7 +58,7 @@ namespace FileMonitor
                     if (_fileCount == 0) _logger.Log("Folder: " + directory);
                     _fileCount++;
                     File.Delete(file);
-                    _logger.Log(file + " - Deleted");
+                    _logger.Log("File: "+ new FileInfo(file).Name + " - Deleted");
                 }
             }
             catch (IOException e)
