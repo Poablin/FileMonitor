@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace MonitorEngine.Utilities
+namespace FileMonitor
 {
     public class ErrorCheck : IErrorCheck
     {
@@ -32,8 +32,23 @@ namespace MonitorEngine.Utilities
 
         public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
-            return Convert.ToInt64(file.Substring(file.LastIndexOf('[')).Trim('[', ']')) <
-                   Convert.ToInt64(_currentDateString);
+            var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
+
+        }
+
+        public bool IsValidFile()
+        {
+            string file = "";
+            CheckIfFileIsCorrectFormat(file);
+            CheckIfFileDateIsLessThanCurrentDate(file);
+            return true;
+        }
+        public bool IsValidDirectory()
+        {
+            string directory = "";
+            CheckIfDirectoryIsEmpty(directory);
+            CheckIfDirectoryIsCorrectFormat(directory);
+            return true;
         }
     }
 }

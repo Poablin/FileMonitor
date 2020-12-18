@@ -1,4 +1,4 @@
-﻿namespace MonitorEngine.Utilities
+﻿namespace FileMonitor
 {
     public interface ILogger
     {

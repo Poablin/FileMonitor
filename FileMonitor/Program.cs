@@ -1,17 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MonitorEngine.Utilities;
 
 namespace FileMonitor
 {
     internal static class Program
     {
-        private static async Task Main(string[] args)
+        private static Task Main(string[] args)
         {
-            var monitor = new MonitorEngine.Monitor(new Logger(), new ErrorCheck(), new FileOperations());
+            var monitor = new FileDeletionService(new Logger(), new ErrorCheck());
             while (true)
             {
-                await monitor.RunAsync();
+                monitor.Run();
                 Thread.Sleep(900000);
             }
         }

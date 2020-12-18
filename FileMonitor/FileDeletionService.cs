@@ -1,51 +1,43 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using MonitorEngine.Utilities;
+﻿using System.IO;
 
-namespace MonitorEngine
+namespace FileMonitor
 {
-    public class Monitor : IMonitor
+    public class FileDeletionService : IFileDeletionService
     {
-        private const string Path = @"Enter full path here"; //eks C:\Users\test\Downloads\Done
+        private readonly string[] Paths = { @"Enter full path here" }; //eks C:\Users\test\Downloads\Done
         private readonly IErrorCheck _errorCheck;
-        private readonly IFileOperations _fileOperations;
         private readonly ILogger _logger;
         private int _fileCount;
 
-        public Monitor(ILogger logger, IErrorCheck errorCheck, IFileOperations fileOperations)
+        public FileDeletionService(ILogger logger, IErrorCheck errorCheck)
         {
             _logger = logger;
             _errorCheck = errorCheck;
-            _fileOperations = fileOperations;
         }
 
-        public async Task RunAsync()
+        public void Run()
         {
-            if (!_errorCheck.CheckIfPathExists(Path))
+            foreach (var path in Paths)
             {
-                _logger.Log("Path does not exist");
-                return;
+                if (!_errorCheck.CheckIfPathExists(path))
+                {
+                    _logger.Log("Path does not exist");
+                    return;
+                }
+
+                SearchDirectoriesAndDeleteIfNecessary(path);
             }
-
-            await Task.FromResult(StartOperation());
         }
 
-        public bool StartOperation()
+        public void SearchDirectoriesAndDeleteIfNecessary(string path)
         {
-            SearchDirectoriesAndDeleteIfNecessary();
-            return true;
-        }
-
-        public void SearchDirectoriesAndDeleteIfNecessary()
-        {
-            foreach (var directory in _fileOperations.GetDirectory(Path))
+            foreach (var directory in Directory.GetDirectories(path))
             {
                 _fileCount = 0;
                 if (!_errorCheck.CheckIfDirectoryIsCorrectFormat(directory)) continue;
                 SearchFilesAndDeleteIfNecessary(directory);
                 if (!_errorCheck.CheckIfDirectoryIsEmpty(directory)) continue;
-                _fileOperations.DeleteDirectory(directory);
+                Directory.Delete(directory);
                 _logger.Log("Folder: " + directory + " - Deleted");
             }
         }
@@ -54,13 +46,13 @@ namespace MonitorEngine
         {
             try
             {
-                foreach (var file in _fileOperations.GetFiles(directory))
+                foreach (var file in Directory.GetDirectories(directory))
                 {
                     if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
                     if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;
                     if (_fileCount == 0) _logger.Log("Folder: " + directory);
                     _fileCount++;
-                    _fileOperations.DeleteFile(file);
+                    File.Delete(file);
                     _logger.Log(file + " - Deleted");
                 }
             }
