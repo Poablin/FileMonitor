@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -28,10 +29,7 @@ namespace FileMonitor
         public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
             var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-            if (!DateTime.TryParseExact(date, "yyyyMMddHHmm", null, System.Globalization.DateTimeStyles.AssumeLocal, out _))
-            {
-                return false;
-            }
+            if (!DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _)) return false;
             if (DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now) return true;
             return false;
         }

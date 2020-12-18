@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace FileMonitor
+﻿namespace FileMonitor
 {
     public interface IFileDeletionService
     {
