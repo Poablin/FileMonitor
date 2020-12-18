@@ -4,14 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace FileMonitor
 {
-    public class ErrorCheck : IErrorCheck
+    public class FileSystemValidation : IFileSystemValidation
     {
         private readonly string _currentDateString = DateTime.Now.ToString("yyyyMMddHHmm");
-
-        public bool CheckIfPathExists(string path)
-        {
-            return Directory.Exists(path);
-        }
 
         public bool CheckIfDirectoryIsEmpty(string directory)
         {
@@ -39,30 +34,6 @@ namespace FileMonitor
             }
             if (DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now) return true;
             return false;
-        }
-
-        public bool CheckIfDoneFolderExists(string directory)
-        {
-            if (new DirectoryInfo(directory).Name == "Done")
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public bool IsValidFile()
-        {
-            string file = "";
-            CheckIfFileIsCorrectFormat(file);
-            CheckIfFileDateIsLessThanCurrentDate(file);
-            return true;
-        }
-        public bool IsValidDirectory()
-        {
-            string directory = "";
-            CheckIfDirectoryIsEmpty(directory);
-            CheckIfDirectoryIsCorrectFormat(directory);
-            return true;
         }
     }
 }
