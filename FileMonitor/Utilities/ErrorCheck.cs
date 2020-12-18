@@ -32,9 +32,13 @@ namespace FileMonitor
 
         public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
-            //var date = DateTime.Parse(file.Substring(file.LastIndexOf('[')).Trim('[', ']'));
-            //if (date < DateTime.Now) return true;
-            return true;
+            var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
+            if (!DateTime.TryParseExact(date, "yyyyMMddHHmm", null, System.Globalization.DateTimeStyles.AssumeLocal, out _))
+            {
+                return false;
+            }
+            if (DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now) return true;
+            return false;
         }
 
         public bool CheckIfDoneFolderExists(string directory)
