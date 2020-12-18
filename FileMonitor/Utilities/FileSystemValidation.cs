@@ -22,20 +22,14 @@ namespace FileMonitor
         {
             var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
             var success = DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
-            if (success)
-            {
-                return DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
-            }
-            return false;
+            if (success) return DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
+            else return false;
         }
+
         public bool FileIsValid(string file)
         {
-            if (FileIsCorrectFormat(file)) return false;
-            else if (FileDateIsLessThanCurrentDate(file)) return false;
-            else
-            {
-                return true;
-            }
+            if (FileIsCorrectFormat(file) && FileDateIsLessThanCurrentDate(file)) return true;
+            else return false;
         }
     }
 }

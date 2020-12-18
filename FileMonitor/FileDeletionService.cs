@@ -6,7 +6,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidation _fileSystemValidation;
         private readonly ILogger _logger;
-        private readonly string[] _paths = {@"C:\Users\krist\Downloads\input"}; //eks C:\Users\test\Downloads
+        private readonly string[] _paths = { @"C:\Users\krist\Downloads\input" }; //eks C:\Users\test\Downloads
         private int _fileCount;
 
         public FileDeletionService(ILogger logger, IFileSystemValidation fileSystemValidation)
@@ -27,7 +27,9 @@ namespace FileMonitor
 
                 foreach (var directory in Directory.GetDirectories(path))
                     if (new DirectoryInfo(directory).Name == "Done")
+                    {
                         SearchDirectoriesAndDeleteIfNecessary(directory);
+                    }
             }
         }
 
@@ -36,19 +38,13 @@ namespace FileMonitor
             foreach (var directory in Directory.GetDirectories(path))
             {
                 _fileCount = 0;
-                if (_fileSystemValidation.CheckIfDirectoryIsCorrectFormat(directory))
+                if (!_fileSystemValidation.DirectoryIsCorrectFormat(directory)) continue;
+                SearchFilesAndDeleteIfNecessary(directory);
+                if (Directory.GetFiles(directory).Length == 0)
                 {
-                    SearchFilesAndDeleteIfNecessary(directory);
-                    if (_fileSystemValidation.CheckIfDirectoryIsEmpty(directory))
-                    {
-                        Directory.Delete(directory);
-                        _logger.Log("Folder: " + directory + " - Deleted");
-                    }
-
-                    ;
+                    Directory.Delete(directory);
+                    _logger.Log("Folder: " + directory + " - Deleted");
                 }
-
-                ;
             }
         }
 
@@ -57,14 +53,13 @@ namespace FileMonitor
             try
             {
                 foreach (var file in Directory.GetFiles(directory))
-                    if (_fileSystemValidation.CheckIfFileIsCorrectFormat(file))
-                        if (_fileSystemValidation.CheckIfFileDateIsLessThanCurrentDate(file))
-                        {
-                            if (_fileCount == 0) _logger.Log("Folder: " + directory);
-                            _fileCount++;
-                            File.Delete(file);
-                            _logger.Log(file + " - Deleted");
-                        }
+                {
+                    if (!_fileSystemValidation.FileIsValid(file)) continue;
+                    if (_fileCount == 0) _logger.Log("Folder: " + directory);
+                    _fileCount++;
+                    File.Delete(file);
+                    _logger.Log(file + " - Deleted");
+                }
             }
             catch (IOException e)
             {
