@@ -4,7 +4,7 @@ namespace FileMonitor
 {
     public class FileDeletionService : IFileDeletionService
     {
-        private readonly string[] Paths = { @"C:\Users\krist\Downloads\input" }; //eks C:\Users\test\Downloads
+        private readonly string[] _paths = { @"C:\Users\krist\Downloads\input" }; //eks C:\Users\test\Downloads
         private readonly IErrorCheck _errorCheck;
         private readonly ILogger _logger;
         private int _fileCount;
@@ -17,7 +17,7 @@ namespace FileMonitor
 
         public void Run()
         {
-            foreach (var path in Paths)
+            foreach (var path in _paths)
             {
                 if (!_errorCheck.CheckIfPathExists(path))
                 {
@@ -26,13 +26,9 @@ namespace FileMonitor
                 }
                 foreach (var directory in Directory.GetDirectories(path))
                 {
-                    if (new DirectoryInfo(directory).Name == "Done")
+                    if (_errorCheck.CheckIfDoneFolderExists(directory))
                     {
                         SearchDirectoriesAndDeleteIfNecessary(directory);
-                    }
-                    else
-                    {
-                        _logger.Log("No Done directory exists");
                     }
                 }
             }
@@ -55,7 +51,7 @@ namespace FileMonitor
         {
             try
             {
-                foreach (var file in Directory.GetDirectories(directory))
+                foreach (var file in Directory.GetFiles(directory))
                 {
                     if (!_errorCheck.CheckIfFileIsCorrectFormat(file)) continue;
                     if (!_errorCheck.CheckIfFileDateIsLessThanCurrentDate(file)) continue;

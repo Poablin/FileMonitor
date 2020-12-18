@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FileMonitor
 {
@@ -20,20 +21,28 @@ namespace FileMonitor
         public bool CheckIfDirectoryIsCorrectFormat(string directory)
         {
             var directoryName = directory.Substring(directory.LastIndexOf('\\') + 1);
-            return directoryName.Length == 8 && long.TryParse(directoryName, out _);
+            return Regex.IsMatch(directoryName, @"[0-9]{8}");
         }
 
         public bool CheckIfFileIsCorrectFormat(string file)
         {
-            if (file.LastIndexOf('[') == -1) return false;
-            var fileDate = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-            return fileDate.Length == 12 && long.TryParse(fileDate, out _);
+            var fileName = file.Substring(file.LastIndexOf('\\') + 1);
+            return Regex.IsMatch(fileName, @"^[^.]{1,}.[^.]{1,}.\[IM-[\d]{7}]-\[[\d]{12}\]");
         }
 
         public bool CheckIfFileDateIsLessThanCurrentDate(string file)
         {
-            var date = DateTime.Parse(file.Substring(file.LastIndexOf('[')).Trim('[', ']'));
-            if (date < DateTime.Now) return true;
+            //var date = DateTime.Parse(file.Substring(file.LastIndexOf('[')).Trim('[', ']'));
+            //if (date < DateTime.Now) return true;
+            return true;
+        }
+
+        public bool CheckIfDoneFolderExists(string directory)
+        {
+            if (new DirectoryInfo(directory).Name == "Done")
+            {
+                return true;
+            }
             return false;
         }
 
