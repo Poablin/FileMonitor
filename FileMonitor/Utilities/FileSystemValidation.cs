@@ -30,8 +30,7 @@ namespace FileMonitor
         {
             var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
             if (!DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _)) return false;
-            if (DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now) return true;
-            return false;
+            return DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
         }
     }
 }
