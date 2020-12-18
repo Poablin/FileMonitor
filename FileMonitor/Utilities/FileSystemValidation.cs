@@ -28,5 +28,14 @@ namespace FileMonitor
             }
             return false;
         }
+        public bool FileIsValid(string file)
+        {
+            if (FileIsCorrectFormat(file)) return false;
+            else if (FileDateIsLessThanCurrentDate(file)) return false;
+            else
+            {
+                return true;
+            }
+        }
     }
 }
