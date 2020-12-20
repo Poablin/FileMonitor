@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileMonitor
+namespace FileMonitor.Utilities
 {
     public class Logger : ILogger
     {

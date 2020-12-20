@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace FileMonitor
+namespace FileMonitor.Utilities
 {
     public class FileSystemValidator : IFileSystemValidator
     {
@@ -26,22 +26,19 @@ namespace FileMonitor
 
         public bool FileDateIsLessThanCurrentDate(string file)
         {
-            var date = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-            var success = DateTime.TryParseExact(date, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
-            if (success) return DateTime.ParseExact(date, "yyyyMMddHHmm", null) < DateTime.Now;
-            else return false;
+            var fileDate = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
+            var parsed = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
+            return parsed && DateTime.ParseExact(fileDate, "yyyyMMddHHmm", null) < DateTime.Now;
         }
 
         public bool DirectoryIsValid(string directory)
         {
-            if (DirectoryIsCorrectFormat(directory) && DirectoryIsADate(directory)) return true;
-            else return false;
+            return DirectoryIsCorrectFormat(directory) && DirectoryIsADate(directory);
         }
 
         public bool FileIsValid(string file)
         {
-            if (FileIsCorrectFormat(file) && FileDateIsLessThanCurrentDate(file)) return true;
-            else return false;
+            return FileIsCorrectFormat(file) && FileDateIsLessThanCurrentDate(file);
         }
     }
 }
