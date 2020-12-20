@@ -27,8 +27,8 @@ namespace FileMonitor.Utilities
         public bool FileDateIsLessThanCurrentDate(string file)
         {
             var fileDate = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
-            var parsed = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
-            return parsed && DateTime.ParseExact(fileDate, "yyyyMMddHHmm", null) < DateTime.Now;
+            var success = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
+            return success && DateTime.ParseExact(fileDate, "yyyyMMddHHmm", null) < DateTime.Now;
         }
 
         public bool DirectoryIsValid(string directory)

@@ -28,9 +28,7 @@ namespace FileMonitor
 
                 foreach (var directory in Directory.GetDirectories(path))
                     if (new DirectoryInfo(directory).Name == "Done")
-                    {
                         SearchDirectoriesAndDeleteIfNecessary(directory);
-                    }
             }
         }
 
