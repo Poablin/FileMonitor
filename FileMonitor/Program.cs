@@ -7,7 +7,7 @@ namespace FileMonitor
     {
         private static Task Main(string[] args)
         {
-            var monitor = new FileDeletionService(new Logger(), new FileSystemValidation());
+            var monitor = new FileDeletionService(new Logger(), new FileSystemValidator());
             while (true)
             {
                 monitor.Run();

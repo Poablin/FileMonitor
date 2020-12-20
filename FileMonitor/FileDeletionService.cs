@@ -4,22 +4,22 @@ namespace FileMonitor
 {
     public class FileDeletionService : IFileDeletionService
     {
-        private readonly IFileSystemValidation _fileSystemValidation;
+        private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
         private string[] _paths = { @"Enter paths here" };
         private int _fileCount;
 
-        public FileDeletionService(ILogger logger, IFileSystemValidation fileSystemValidation)
+        public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
             _logger = logger;
-            _fileSystemValidation = fileSystemValidation;
+            _fileSystemValidator = fileSystemValidation;
         }
 
         public void Run()
         {
             foreach (var path in _paths)
             {
-                if (Directory.Exists(path) == false)
+                if (!Directory.Exists(path))
                 {
                     _logger.Log("Path does not exist");
                     return;
@@ -35,16 +35,23 @@ namespace FileMonitor
 
         public void SearchDirectoriesAndDeleteIfNecessary(string path)
         {
-            foreach (var directory in Directory.GetDirectories(path))
+            try
             {
-                _fileCount = 0;
-                if (!_fileSystemValidation.DirectoryIsCorrectFormat(directory)) continue;
-                SearchFilesAndDeleteIfNecessary(directory);
-                if (Directory.GetFiles(directory).Length == 0)
+                foreach (var directory in Directory.GetDirectories(path))
                 {
-                    Directory.Delete(directory);
-                    _logger.Log("Folder: " + directory + " - Deleted");
+                    _fileCount = 0;
+                    if (!_fileSystemValidator.DirectoryIsValid(directory)) continue;
+                    SearchFilesAndDeleteIfNecessary(directory);
+                    if (Directory.GetFiles(directory).Length == 0)
+                    {
+                        Directory.Delete(directory);
+                        _logger.Log("Folder: " + directory + " - Deleted");
+                    }
                 }
+            }
+            catch (IOException e)
+            {
+                _logger.Log(e.ToString());
             }
         }
 
@@ -54,11 +61,11 @@ namespace FileMonitor
             {
                 foreach (var file in Directory.GetFiles(directory))
                 {
-                    if (!_fileSystemValidation.FileIsValid(file)) continue;
+                    if (!_fileSystemValidator.FileIsValid(file)) continue;
                     if (_fileCount == 0) _logger.Log("Folder: " + directory);
                     _fileCount++;
                     File.Delete(file);
-                    _logger.Log("File: "+ new FileInfo(file).Name + " - Deleted");
+                    _logger.Log("File: " + new FileInfo(file).Name + " - Deleted");
                 }
             }
             catch (IOException e)
