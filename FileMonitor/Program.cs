@@ -8,10 +8,10 @@ namespace FileMonitor
     {
         private static Task Main(string[] args)
         {
-            var monitor = new FileDeletionService(new Logger(), new FileSystemValidator());
+            var fileDeletionService = new FileDeletionService(new Logger(), new FileSystemValidator());
             while (true)
             {
-                monitor.Run();
+                fileDeletionService.Run();
                 Thread.Sleep(900000);
             }
         }
