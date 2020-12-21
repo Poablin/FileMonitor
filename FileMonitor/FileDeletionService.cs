@@ -49,23 +49,22 @@ namespace FileMonitor
 
                     DeleteFolderIfEmpty(subFolder);
                 }
-
             }
         }
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
-            try
+            if (!subFolder.EnumerateFiles().Any())
             {
-                if (!subFolder.EnumerateFiles().Any())
+                try
                 {
                     subFolder.Delete();
                     _logger.Log($"Folder at {subFolder.FullName} - Deleted");
                 }
-            }
-            catch (IOException e)
-            {
-                _logger.Log(e.Message);
+                catch (IOException e)
+                {
+                    _logger.Log(e.Message);
+                }
             }
         }
     }
