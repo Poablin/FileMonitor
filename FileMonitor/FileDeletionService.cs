@@ -39,7 +39,7 @@ namespace FileMonitor
                         try
                         {
                             fileToDelete.Delete();
-                            _logger.Log("File: " + fileToDelete.Name + " - Deleted");
+                            _logger.Log($"File: {fileToDelete.Name} - Deleted");
                         }
                         catch (IOException e)
                         {
@@ -60,7 +60,7 @@ namespace FileMonitor
                 if (!subFolder.EnumerateFiles().Any())
                 {
                     subFolder.Delete();
-                    _logger.Log("Folder at " + subFolder.FullName + " - Deleted");
+                    _logger.Log($"Folder at {subFolder.FullName} - Deleted");
                 }
             }
             catch (IOException e)
