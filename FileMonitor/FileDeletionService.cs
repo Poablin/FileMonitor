@@ -18,6 +18,7 @@ namespace FileMonitor
 
         public void Run()
         {
+
             foreach (var path in _paths)
             {
                 if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
@@ -31,23 +32,31 @@ namespace FileMonitor
 
                 foreach (var subFolder in subFolders)
                 {
-                    var filesToDelete = subFolder.EnumerateFiles()
-                        .Where(x => _fileSystemValidator.FileIsValid(x.Name));
+                    try
+                    {
+                        var filesToDelete = subFolder.EnumerateFiles()
+                            .Where(x => _fileSystemValidator.FileIsValid(x.Name));
 
-                    foreach (var fileToDelete in filesToDelete)
-                        try
-                        {
-                            fileToDelete.Delete();
-                            _logger.Log($"File: {fileToDelete.Name} - Deleted");
-                        }
-                        catch (IOException e)
-                        {
-                            _logger.Log(e.Message);
-                        }
+                        foreach (var fileToDelete in filesToDelete)
+                            try
+                            {
+                                fileToDelete.Delete();
+                                _logger.Log($"File: {fileToDelete.Name} - Deleted");
+                            }
+                            catch (IOException e)
+                            {
+                                _logger.Log(e.Message);
+                            }
 
-                    DeleteFolderIfEmpty(subFolder);
+                        DeleteFolderIfEmpty(subFolder);
+                    }
+                    catch (System.UnauthorizedAccessException e)
+                    {
+                        _logger.Log(e.Message);
+                    }
                 }
             }
+
         }
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
