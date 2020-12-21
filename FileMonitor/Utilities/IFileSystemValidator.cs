@@ -4,18 +4,18 @@ namespace FileMonitor.Utilities
 {
     public interface IFileSystemValidator
     {
-        bool DirectoryIsCorrectFormat(string directory);
+        bool DirectoryIsCorrectFormat(string directoryName);
 
-        bool DirectoryIsADate(string directory);
+        bool DirectoryIsADate(string directoryName);
 
-        bool FileIsCorrectFormat(string file);
+        bool FileIsCorrectFormat(string fileName);
 
-        bool FileDateIsLessThanCurrentDate(string file);
+        bool FileDateIsLessThanCurrentDate(string fileName);
 
         bool TryGetDoneFolder(string path, out DirectoryInfo doneFolder);
 
-        bool DirectoryIsValid(string directory);
+        bool DirectoryIsValid(string directoryName);
 
-        bool FileIsValid(string file);
+        bool FileIsValid(string fileName);
     }
 }
