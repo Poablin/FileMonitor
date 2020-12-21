@@ -48,9 +48,7 @@ namespace FileMonitor
                                     _logger.Log(e.Message);
                                 }
 
-                            if (subFolder.EnumerateFiles().Any()) continue;
-                            subFolder.Delete();
-                            _logger.Log($"Folder at {subFolder.FullName} - Deleted");
+                            DeleteFolderIfEmpty(subFolder);
                         }
                         catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
                         {
@@ -61,6 +59,12 @@ namespace FileMonitor
                 {
                     _logger.Log(e.Message);
                 }
+        }
+        public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
+        {
+            if (subFolder.EnumerateFiles().Any()) return;
+            subFolder.Delete();
+            _logger.Log($"Folder at {subFolder.FullName} - Deleted");
         }
     }
 }
