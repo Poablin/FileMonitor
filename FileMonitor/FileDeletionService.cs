@@ -48,7 +48,7 @@ namespace FileMonitor
                                     _logger.Log(e.Message);
                                 }
 
-                            if (subFolder.EnumerateFiles().Any()) return;
+                            if (subFolder.EnumerateFiles().Any()) continue;
                             subFolder.Delete();
                             _logger.Log($"Folder at {subFolder.FullName} - Deleted");
                         }
