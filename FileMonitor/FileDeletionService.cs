@@ -8,8 +8,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private string[] _paths = { @"Enter paths here" };
-        private int _fileCount;
+        private string[] _paths = {@"C:\Users\krist\Downloads\input"};
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
@@ -46,12 +45,9 @@ namespace FileMonitor
             }
         }
 
-        private void DeleteFolderIfEmpty(DirectoryInfo subFolder)
+        public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
-            if (subFolder.EnumerateDirectories().Count() == 0)
-            {
-                subFolder.Delete();
-            }
+            if (!subFolder.EnumerateFiles().Any()) subFolder.Delete();
         }
     }
 }
