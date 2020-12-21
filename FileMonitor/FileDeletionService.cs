@@ -1,7 +1,7 @@
-﻿using FileMonitor.Utilities;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using FileMonitor.Utilities;
 
 namespace FileMonitor
 {
@@ -9,7 +9,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private readonly string[] _paths = { @"Enter paths here" };
+        private readonly string[] _paths = {@"Enter paths here"};
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
@@ -20,42 +20,45 @@ namespace FileMonitor
         public void Run()
         {
             foreach (var path in _paths)
-            {
-                if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
+                try
                 {
-                    _logger.Log("Done folder does not exist");
-                    continue;
+                    if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
+                    {
+                        _logger.Log("Done folder does not exist");
+                        continue;
+                    }
+
+                    var subFolders = doneFolder.EnumerateDirectories()
+                        .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
+
+                    foreach (var subFolder in subFolders)
+                        try
+                        {
+                            var filesToDelete = subFolder.EnumerateFiles()
+                                .Where(x => _fileSystemValidator.FileIsValid(x.Name));
+
+                            foreach (var fileToDelete in filesToDelete)
+                                try
+                                {
+                                    fileToDelete.Delete();
+                                    _logger.Log($"File: {fileToDelete.Name} - Deleted");
+                                }
+                                catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+                                {
+                                    _logger.Log(e.Message);
+                                }
+
+                            DeleteFolderIfEmpty(subFolder);
+                        }
+                        catch (UnauthorizedAccessException e)
+                        {
+                            _logger.Log(e.Message);
+                        }
                 }
-
-                var subFolders = doneFolder.EnumerateDirectories()
-                    .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
-
-                foreach (var subFolder in subFolders)
+                catch (UnauthorizedAccessException e)
                 {
-                    try
-                    {
-                        var filesToDelete = subFolder.EnumerateFiles()
-                            .Where(x => _fileSystemValidator.FileIsValid(x.Name));
-
-                        foreach (var fileToDelete in filesToDelete)
-                            try
-                            {
-                                fileToDelete.Delete();
-                                _logger.Log($"File: {fileToDelete.Name} - Deleted");
-                            }
-                            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
-                            {
-                                _logger.Log(e.Message);
-                            }
-
-                        DeleteFolderIfEmpty(subFolder);
-                    }
-                    catch (UnauthorizedAccessException e)
-                    {
-                        _logger.Log(e.Message);
-                    }
+                    _logger.Log(e.Message);
                 }
-            }
         }
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)

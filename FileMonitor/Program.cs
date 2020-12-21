@@ -1,6 +1,6 @@
-﻿using FileMonitor.Utilities;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using FileMonitor.Utilities;
 
 namespace FileMonitor
 {
