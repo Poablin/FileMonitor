@@ -9,7 +9,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private readonly string[] _paths = { @"Enter paths here" };
+        private readonly string[] _paths = { @"C:\Users\krist\Downloads\input" };
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
@@ -28,16 +28,12 @@ namespace FileMonitor
                         continue;
                     }
 
-                    var subFolders = doneFolder.EnumerateDirectories()
-                        .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
-
-                    foreach (var subFolder in subFolders)
+                    foreach (var subFolder in doneFolder.EnumerateDirectories()
+                        .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name)))
                         try
                         {
-                            var filesToDelete = subFolder.EnumerateFiles()
-                                .Where(x => _fileSystemValidator.FileIsValid(x.Name));
-
-                            foreach (var fileToDelete in filesToDelete)
+                            foreach (var fileToDelete in subFolder.EnumerateFiles()
+                                .Where(x => _fileSystemValidator.FileIsValid(x.Name)))
                                 try
                                 {
                                     fileToDelete.Delete();
