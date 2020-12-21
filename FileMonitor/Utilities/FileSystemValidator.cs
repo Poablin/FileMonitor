@@ -24,11 +24,10 @@ namespace FileMonitor.Utilities
         public bool FileIsValid(string fileName)
         {
             var isCorrectFormat = Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
-            if (!isCorrectFormat) return false;
-            var fileDate = fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']');
+            var fileDate = isCorrectFormat ? fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']') : null;
             var isValidDate = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal,
                 out var validDate);
-            return isValidDate && validDate < DateTime.Now;
+            return isCorrectFormat && isValidDate && validDate < DateTime.Now;
         }
     }
 }
