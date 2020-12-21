@@ -23,8 +23,9 @@ namespace FileMonitor.Utilities
 
         public bool FileIsValid(string fileName)
         {
-            var fileDate = fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']');
             var isCorrectFormat = Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
+            if (!isCorrectFormat) return isCorrectFormat;
+            var fileDate = fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']');
             var isValidDate = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal,
                 out var validDate);
             return isCorrectFormat && isValidDate && validDate < DateTime.Now;
