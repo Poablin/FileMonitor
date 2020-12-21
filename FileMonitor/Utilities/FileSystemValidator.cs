@@ -22,9 +22,9 @@ namespace FileMonitor.Utilities
             return Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
         }
 
-        public bool FileDateIsLessThanCurrentDate(string file)
+        public bool FileDateIsLessThanCurrentDate(string fileName)
         {
-            var fileDate = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
+            var fileDate = fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']');
             var success = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
             return success && DateTime.ParseExact(fileDate, "yyyyMMddHHmm", null) < DateTime.Now;
         }
@@ -35,14 +35,14 @@ namespace FileMonitor.Utilities
             return doneFolder.Exists;
         }
 
-        public bool DirectoryIsValid(string directory)
+        public bool DirectoryIsValid(string directoryName)
         {
-            return DirectoryIsCorrectFormat(directory) && DirectoryIsADate(directory);
+            return DirectoryIsCorrectFormat(directoryName) && DirectoryIsADate(directoryName);
         }
 
-        public bool FileIsValid(string file)
+        public bool FileIsValid(string fileName)
         {
-            return FileIsCorrectFormat(file) && FileDateIsLessThanCurrentDate(file);
+            return FileIsCorrectFormat(fileName) && FileDateIsLessThanCurrentDate(fileName);
         }
     }
 }
