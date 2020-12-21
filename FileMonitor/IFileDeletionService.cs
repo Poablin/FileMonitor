@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace FileMonitor
+﻿namespace FileMonitor
 {
     public interface IFileDeletionService
     {
