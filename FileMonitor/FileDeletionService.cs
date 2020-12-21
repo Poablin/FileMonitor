@@ -60,6 +60,7 @@ namespace FileMonitor
                     _logger.Log(e.Message);
                 }
         }
+
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
             if (subFolder.EnumerateFiles().Any()) return;
