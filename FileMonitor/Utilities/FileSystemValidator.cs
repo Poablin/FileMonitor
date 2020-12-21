@@ -7,28 +7,6 @@ namespace FileMonitor.Utilities
 {
     public class FileSystemValidator : IFileSystemValidator
     {
-        public bool DirectoryIsCorrectFormat(string directoryName)
-        {
-            return Regex.IsMatch(directoryName, @"^[\d]{4}[0-1][\d][0-3][\d]$");
-        }
-
-        public bool DirectoryIsADate(string directoryName)
-        {
-            return DateTime.TryParseExact(directoryName, "yyyyMMdd", null, DateTimeStyles.AssumeLocal, out _);
-        }
-
-        public bool FileIsCorrectFormat(string fileName)
-        {
-            return Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
-        }
-
-        public bool FileDateIsLessThanCurrentDate(string fileName)
-        {
-            var fileDate = fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']');
-            var success = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out var result);
-            return success && result < DateTime.Now;
-        }
-
         public bool TryGetDoneFolder(string path, out DirectoryInfo doneFolder)
         {
             doneFolder = new DirectoryInfo(Path.Combine(path, "Done"));
@@ -37,12 +15,17 @@ namespace FileMonitor.Utilities
 
         public bool DirectoryIsValid(string directoryName)
         {
-            return DirectoryIsCorrectFormat(directoryName) && DirectoryIsADate(directoryName);
+            var isCorrectFormat = Regex.IsMatch(directoryName, @"^[\d]{4}[0-1][\d][0-3][\d]$");
+            var isValidDate = DateTime.TryParseExact(directoryName, "yyyyMMdd", null, DateTimeStyles.AssumeLocal, out _);
+            return isCorrectFormat && isValidDate;
         }
 
         public bool FileIsValid(string fileName)
         {
-            return FileIsCorrectFormat(fileName) && FileDateIsLessThanCurrentDate(fileName);
+            var fileDate = fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']');
+            var isCorrectFormat = Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
+            var isValidDate = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out var validDate);
+            return isCorrectFormat && isValidDate && validDate < DateTime.Now;
         }
     }
 }
