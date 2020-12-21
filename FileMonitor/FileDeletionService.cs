@@ -61,7 +61,7 @@ namespace FileMonitor
                 }
         }
 
-        public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
+        private void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
             if (subFolder.EnumerateFiles().Any()) return;
             subFolder.Delete();
