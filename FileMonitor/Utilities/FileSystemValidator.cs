@@ -9,7 +9,7 @@ namespace FileMonitor.Utilities
     {
         public bool DirectoryIsCorrectFormat(string directoryName)
         {
-            return Regex.IsMatch(directoryName, @"^[0-9]{4}[0-1][0-9][0-3][0-9]");
+            return Regex.IsMatch(directoryName, @"^[\d]{4}[0-1][\d][0-3][\d]");
         }
 
         public bool DirectoryIsADate(string directoryName)
