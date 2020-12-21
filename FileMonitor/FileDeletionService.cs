@@ -55,10 +55,17 @@ namespace FileMonitor
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
-            if (!subFolder.EnumerateFiles().Any())
+            try
             {
-                subFolder.Delete();
-                _logger.Log("Folder at " + subFolder.FullName + " - Deleted");
+                if (!subFolder.EnumerateFiles().Any())
+                {
+                    subFolder.Delete();
+                    _logger.Log("Folder at " + subFolder.FullName + " - Deleted");
+                }
+            }
+            catch (IOException e)
+            {
+                _logger.Log(e.ToString());
             }
         }
     }
