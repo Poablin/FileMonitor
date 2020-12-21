@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using FileMonitor.Utilities;
+using System.IO;
 using System.Linq;
-using FileMonitor.Utilities;
 
 namespace FileMonitor
 {
@@ -35,7 +35,6 @@ namespace FileMonitor
                         .Where(x => _fileSystemValidator.FileIsValid(x.Name));
 
                     foreach (var fileToDelete in filesToDelete)
-                    {
                         try
                         {
                             fileToDelete.Delete();
@@ -45,7 +44,6 @@ namespace FileMonitor
                         {
                             _logger.Log(e.Message);
                         }
-                    }
 
                     DeleteFolderIfEmpty(subFolder);
                 }
