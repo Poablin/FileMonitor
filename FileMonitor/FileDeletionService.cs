@@ -9,7 +9,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private readonly string[] _paths = {@"Enter paths here"};
+        private readonly string[] _paths = { @"Enter paths here" };
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
