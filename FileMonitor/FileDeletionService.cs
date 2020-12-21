@@ -18,7 +18,6 @@ namespace FileMonitor
 
         public void Run()
         {
-
             foreach (var path in _paths)
             {
                 if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
@@ -56,7 +55,6 @@ namespace FileMonitor
                     }
                 }
             }
-
         }
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
