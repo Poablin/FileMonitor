@@ -1,11 +1,11 @@
-﻿namespace FileMonitor
+﻿using System.IO;
+
+namespace FileMonitor
 {
     public interface IFileDeletionService
     {
         void Run();
 
-        void SearchDirectoriesAndDeleteIfNecessary(string path);
-
-        void SearchFilesAndDeleteIfNecessary(string directory);
+        void DeleteFolderIfEmpty(DirectoryInfo subFolder);
     }
 }

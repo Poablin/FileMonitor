@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace FileMonitor.Utilities
 {
     public class FileSystemValidator : IFileSystemValidator
     {
-        public bool DirectoryIsCorrectFormat(string directory)
+        public bool DirectoryIsCorrectFormat(string directoryName)
         {
-            var directoryName = directory.Substring(directory.LastIndexOf('\\') + 1);
             return Regex.IsMatch(directoryName, @"^[0-9]{4}[0-1][0-9][0-3][0-9]");
         }
 
-        public bool DirectoryIsADate(string directory)
+        public bool DirectoryIsADate(string directoryName)
         {
-            var directoryName = directory.Substring(directory.LastIndexOf('\\') + 1);
             return DateTime.TryParseExact(directoryName, "yyyyMMdd", null, DateTimeStyles.AssumeLocal, out _);
         }
 
@@ -29,6 +28,12 @@ namespace FileMonitor.Utilities
             var fileDate = file.Substring(file.LastIndexOf('[')).Trim('[', ']');
             var success = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal, out _);
             return success && DateTime.ParseExact(fileDate, "yyyyMMddHHmm", null) < DateTime.Now;
+        }
+
+        public bool TryGetDoneFolder(string path, out DirectoryInfo doneFolder)
+        {
+            doneFolder = new DirectoryInfo(Path.Combine(path, "Done"));
+            return doneFolder.Exists;
         }
 
         public bool DirectoryIsValid(string directory)

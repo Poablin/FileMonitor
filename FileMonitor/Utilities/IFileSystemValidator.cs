@@ -1,4 +1,6 @@
-﻿namespace FileMonitor.Utilities
+﻿using System.IO;
+
+namespace FileMonitor.Utilities
 {
     public interface IFileSystemValidator
     {
@@ -10,7 +12,7 @@
 
         bool FileDateIsLessThanCurrentDate(string file);
 
-        bool TryGetDoneFolder(string path, out object doneFolder);
+        bool TryGetDoneFolder(string path, out DirectoryInfo doneFolder);
 
         bool DirectoryIsValid(string directory);
 

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using FileMonitor.Utilities;
 
 namespace FileMonitor
@@ -20,57 +21,36 @@ namespace FileMonitor
         {
             foreach (var path in _paths)
             {
-
                 if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
                 {
                     _logger.Log("Done folder does not exist");
                     continue;
                 }
 
-                foreach (var directory in Directory.GetDirectories(path))
-                    if (new DirectoryInfo(directory).Name == "Done")
-                        SearchDirectoriesAndDeleteIfNecessary(directory);
-            }
-        }
+                var subFolders = doneFolder.EnumerateDirectories()
+                    .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
 
-        public void SearchDirectoriesAndDeleteIfNecessary(string path)
-        {
-            try
-            {
-                foreach (var directory in Directory.GetDirectories(path))
+                foreach (var subFolder in subFolders)
                 {
-                    _fileCount = 0;
-                    if (!_fileSystemValidator.DirectoryIsValid(directory)) continue;
-                    SearchFilesAndDeleteIfNecessary(directory);
-                    if (Directory.GetFiles(directory).Length == 0)
+                    var filesToDelete = subFolder.EnumerateFiles()
+                        .Where(x => _fileSystemValidator.FileIsValid(x.Name));
+
+                    foreach (var fileToDelete in filesToDelete)
                     {
-                        Directory.Delete(directory);
-                        _logger.Log("Folder: " + directory + " - Deleted");
+                        var test = fileToDelete;
+                        test.Delete();
                     }
+
+                    DeleteFolderIfEmpty(subFolder);
                 }
-            }
-            catch (IOException e)
-            {
-                _logger.Log(e.ToString());
             }
         }
 
-        public void SearchFilesAndDeleteIfNecessary(string directory)
+        private void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
-            try
+            if (subFolder.EnumerateDirectories().Count() == 0)
             {
-                foreach (var file in Directory.GetFiles(directory))
-                {
-                    if (!_fileSystemValidator.FileIsValid(file)) continue;
-                    if (_fileCount == 0) _logger.Log("Folder: " + directory);
-                    _fileCount++;
-                    File.Delete(file);
-                    _logger.Log("File: " + new FileInfo(file).Name + " - Deleted");
-                }
-            }
-            catch (IOException e)
-            {
-                _logger.Log(e.ToString());
+                subFolder.Delete();
             }
         }
     }
