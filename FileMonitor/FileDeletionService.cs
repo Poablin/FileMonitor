@@ -8,7 +8,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private string[] _paths = {@"C:\Users\krist\Downloads\input"};
+        private readonly string[] _paths = { @"Enter paths here" };
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
@@ -36,8 +36,8 @@ namespace FileMonitor
 
                     foreach (var fileToDelete in filesToDelete)
                     {
-                        var test = fileToDelete;
-                        test.Delete();
+                        _logger.Log("File: " + fileToDelete.Name + " - Deleted");
+                        fileToDelete.Delete();
                     }
 
                     DeleteFolderIfEmpty(subFolder);
@@ -47,7 +47,11 @@ namespace FileMonitor
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
-            if (!subFolder.EnumerateFiles().Any()) subFolder.Delete();
+            if (!subFolder.EnumerateFiles().Any())
+            {
+                _logger.Log("Folder at " + subFolder.FullName + " - Deleted");
+                subFolder.Delete();
+            }
         }
     }
 }

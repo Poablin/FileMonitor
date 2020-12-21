@@ -17,9 +17,8 @@ namespace FileMonitor.Utilities
             return DateTime.TryParseExact(directoryName, "yyyyMMdd", null, DateTimeStyles.AssumeLocal, out _);
         }
 
-        public bool FileIsCorrectFormat(string file)
+        public bool FileIsCorrectFormat(string fileName)
         {
-            var fileName = file.Substring(file.LastIndexOf('\\') + 1);
             return Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
         }
 
