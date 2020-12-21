@@ -21,7 +21,7 @@ namespace FileMonitor.Utilities
         public bool FileIsCorrectFormat(string file)
         {
             var fileName = file.Substring(file.LastIndexOf('\\') + 1);
-            return Regex.IsMatch(fileName, @"^[^.]{1,}.[^.]{1,}.\[IM-[\d]{7}]-\[[\d]{12}\]");
+            return Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
         }
 
         public bool FileDateIsLessThanCurrentDate(string file)

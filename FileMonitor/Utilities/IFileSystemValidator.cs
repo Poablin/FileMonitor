@@ -10,6 +10,8 @@
 
         bool FileDateIsLessThanCurrentDate(string file);
 
+        bool TryGetDoneFolder(string path, out object doneFolder);
+
         bool DirectoryIsValid(string directory);
 
         bool FileIsValid(string file);

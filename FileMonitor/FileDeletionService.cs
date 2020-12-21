@@ -20,10 +20,11 @@ namespace FileMonitor
         {
             foreach (var path in _paths)
             {
-                if (!Directory.Exists(path))
+
+                if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
                 {
-                    _logger.Log("Path does not exist");
-                    return;
+                    _logger.Log("Done folder does not exist");
+                    continue;
                 }
 
                 foreach (var directory in Directory.GetDirectories(path))
