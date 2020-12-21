@@ -43,7 +43,7 @@ namespace FileMonitor
                         }
                         catch (IOException e)
                         {
-                            _logger.Log(e.ToString());
+                            _logger.Log(e.Message);
                         }
                     }
 
@@ -65,7 +65,7 @@ namespace FileMonitor
             }
             catch (IOException e)
             {
-                _logger.Log(e.ToString());
+                _logger.Log(e.Message);
             }
         }
     }
