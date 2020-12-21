@@ -8,7 +8,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private readonly string[] _paths = { @"Enter paths here" };
+        private readonly string[] _paths = { @"C:\Users\krist\Downloads\input" };
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
@@ -18,53 +18,47 @@ namespace FileMonitor
 
         public void Run()
         {
-            try
+            foreach (var path in _paths)
             {
-                foreach (var path in _paths)
+                if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
                 {
-                    if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
-                    {
-                        _logger.Log("Done folder does not exist");
-                        continue;
-                    }
-
-                    var subFolders = doneFolder.EnumerateDirectories()
-                        .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
-
-                    foreach (var subFolder in subFolders)
-                    {
-                        var filesToDelete = subFolder.EnumerateFiles()
-                            .Where(x => _fileSystemValidator.FileIsValid(x.Name));
-
-                        foreach (var fileToDelete in filesToDelete)
-                        {
-                            _logger.Log("File: " + fileToDelete.Name + " - Deleted");
-                            fileToDelete.Delete();
-                        }
-
-                        DeleteFolderIfEmpty(subFolder);
-                    }
+                    _logger.Log("Done folder does not exist");
+                    continue;
                 }
-            }
-            catch (IOException e)
-            {
-                _logger.Log(e.ToString());
+
+                var subFolders = doneFolder.EnumerateDirectories()
+                    .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
+
+                foreach (var subFolder in subFolders)
+                {
+                    var filesToDelete = subFolder.EnumerateFiles()
+                        .Where(x => _fileSystemValidator.FileIsValid(x.Name));
+
+                    foreach (var fileToDelete in filesToDelete)
+                    {
+                        try
+                        {
+                            fileToDelete.Delete();
+                            _logger.Log("File: " + fileToDelete.Name + " - Deleted");
+                        }
+                        catch (IOException e)
+                        {
+                            _logger.Log(e.ToString());
+                        }
+                    }
+
+                    DeleteFolderIfEmpty(subFolder);
+                }
+
             }
         }
 
         public void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
-            try
+            if (!subFolder.EnumerateFiles().Any())
             {
-                if (!subFolder.EnumerateFiles().Any())
-                {
-                    _logger.Log("Folder at " + subFolder.FullName + " - Deleted");
-                    subFolder.Delete();
-                }
-            }
-            catch (IOException e)
-            {
-                _logger.Log(e.ToString());
+                subFolder.Delete();
+                _logger.Log("Folder at " + subFolder.FullName + " - Deleted");
             }
         }
     }
