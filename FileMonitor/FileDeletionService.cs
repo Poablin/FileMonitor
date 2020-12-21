@@ -1,4 +1,5 @@
 ﻿using FileMonitor.Utilities;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -42,14 +43,14 @@ namespace FileMonitor
                                 fileToDelete.Delete();
                                 _logger.Log($"File: {fileToDelete.Name} - Deleted");
                             }
-                            catch (IOException e)
+                            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
                             {
                                 _logger.Log(e.Message);
                             }
 
                         DeleteFolderIfEmpty(subFolder);
                     }
-                    catch (System.UnauthorizedAccessException e)
+                    catch (UnauthorizedAccessException e)
                     {
                         _logger.Log(e.Message);
                     }
@@ -65,7 +66,7 @@ namespace FileMonitor
                 subFolder.Delete();
                 _logger.Log($"Folder at {subFolder.FullName} - Deleted");
             }
-            catch (IOException e)
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
             {
                 _logger.Log(e.Message);
             }
