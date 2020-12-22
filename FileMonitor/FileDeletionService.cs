@@ -1,7 +1,8 @@
-﻿using System;
+﻿using FileMonitor.Utilities;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FileMonitor.Utilities;
 
 namespace FileMonitor
 {
@@ -44,13 +45,16 @@ namespace FileMonitor
 
                 foreach (var subFolder in subFolders)
                 {
-                    var filesToDelete = subFolder.EnumerateFiles()
-                        .Where(x => _fileSystemValidator.FileIsValid(x.Name));
-
-                    foreach (var fileToDelete in filesToDelete)
+                    IEnumerable<FileInfo> filesToDelete;
+                    try
                     {
-                        fileToDelete.Delete();
-                        _logger.Log($"File: {fileToDelete.Name} - Deleted");
+                        filesToDelete = subFolder.EnumerateFiles()
+                            .Where(x => _fileSystemValidator.FileIsValid(x.Name));
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Log(e.Message);
+                        continue;
                     }
 
                     DeleteFolderIfEmpty(subFolder);
