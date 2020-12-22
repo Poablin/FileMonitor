@@ -1,8 +1,8 @@
-﻿using FileMonitor.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FileMonitor.Utilities;
 
 namespace FileMonitor
 {
@@ -10,7 +10,7 @@ namespace FileMonitor
     {
         private readonly IFileSystemValidator _fileSystemValidator;
         private readonly ILogger _logger;
-        private readonly string[] _paths = { @"Enter paths here" };
+        private readonly string[] _paths = { @"C:\Users\krist\Downloads\input" };
 
         public FileDeletionService(ILogger logger, IFileSystemValidator fileSystemValidation)
         {
@@ -55,6 +55,12 @@ namespace FileMonitor
                     {
                         _logger.Log(e.Message);
                         continue;
+                    }
+
+                    foreach (var fileToDelete in filesToDelete)
+                    {
+                        fileToDelete.Delete();
+                        _logger.Log($"File: {fileToDelete.Name} - Deleted");
                     }
 
                     DeleteFolderIfEmpty(subFolder);
