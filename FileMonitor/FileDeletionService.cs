@@ -29,10 +29,10 @@ namespace FileMonitor
                         continue;
                     }
 
-                    var validSubDirectories = doneFolder.EnumerateDirectories()
+                    var subFolders = doneFolder.EnumerateDirectories()
                         .Where(x => _fileSystemValidator.DirectoryIsValid(x.Name));
 
-                    foreach (var subFolder in validSubDirectories)
+                    foreach (var subFolder in subFolders)
                     {
                         var filesToDelete = subFolder.EnumerateFiles()
                             .Where(x => _fileSystemValidator.FileIsValid(x.Name));
@@ -56,6 +56,7 @@ namespace FileMonitor
         private void DeleteFolderIfEmpty(DirectoryInfo subFolder)
         {
             if (subFolder.EnumerateFiles().Any()) return;
+
             subFolder.Delete();
             _logger.Log($"Folder at {subFolder.FullName} - Deleted");
         }

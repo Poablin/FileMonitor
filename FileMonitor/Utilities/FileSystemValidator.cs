@@ -7,6 +7,12 @@ namespace FileMonitor.Utilities
 {
     public class FileSystemValidator : IFileSystemValidator
     {
+        private static readonly Regex ValidFileRegex =
+            new Regex(@"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$", RegexOptions.Compiled);
+
+        private static readonly Regex ValidDirectoryRegex =
+            new Regex(@"^[\d]{4}[0-1][\d][0-3][\d]$", RegexOptions.Compiled);
+
         public bool TryGetDoneFolder(string path, out DirectoryInfo doneFolder)
         {
             doneFolder = new DirectoryInfo(Path.Combine(path, "Done"));
@@ -15,7 +21,7 @@ namespace FileMonitor.Utilities
 
         public bool DirectoryIsValid(string directoryName)
         {
-            var isCorrectFormat = Regex.IsMatch(directoryName, @"^[\d]{4}[0-1][\d][0-3][\d]$");
+            var isCorrectFormat = ValidDirectoryRegex.IsMatch(directoryName);
             var isValidDate = DateTime.TryParseExact(directoryName, "yyyyMMdd", null, DateTimeStyles.AssumeLocal,
                 out _);
             return isCorrectFormat && isValidDate;
@@ -23,13 +29,12 @@ namespace FileMonitor.Utilities
 
         public bool FileIsValid(string fileName)
         {
-            var isCorrectFormat = Regex.IsMatch(fileName, @"^.*[.]\[IM-\d+]-\[(?<deleteDate>\d{12})]$");
-            var fileDate = isCorrectFormat
-                ? fileName.Substring(fileName.LastIndexOf('[')).Trim('[', ']')
-                : string.Empty;
-            var isValidDate = DateTime.TryParseExact(fileDate, "yyyyMMddHHmm", null, DateTimeStyles.AssumeLocal,
+            var match = ValidFileRegex.Match(fileName);
+            var isValidDate = DateTime.TryParseExact(match.Groups["deleteDate"].Value, "yyyyMMddHHmm",
+                null, DateTimeStyles.AssumeLocal,
                 out var validDate);
-            return isCorrectFormat && isValidDate && validDate < DateTime.Now;
+
+            return match.Success && isValidDate && validDate < DateTime.Now;
         }
     }
 }
