@@ -30,9 +30,9 @@ namespace FileMonitor
             }
         }
 
-        private void DeleteExpiredFilesAndEmptyFolders(string[] _paths)
+        private void DeleteExpiredFilesAndEmptyFolders(IEnumerable<string> paths)
         {
-            foreach (var path in _paths)
+            foreach (var path in paths)
             {
                 if (!_fileSystemValidator.TryGetDoneFolder(path, out var doneFolder))
                 {
